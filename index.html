@@ -106,7 +106,7 @@
         }
     </style>
     <script>
-        window.onload = function () { 
+         window.onload = function () { 
             document.getElementById('googleSignInBtn').addEventListener('click', function () {
                 console.log("Bouton Google cliqué");
                 let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -118,17 +118,39 @@
                     include_granted_scopes: 'true',
                     state: 'pass-through-value'
                 };
-                let url = oauth2Endpoint + '?' + new URLSearchParams(params).toString();
-                console.log("Redirection vers : " + url);
-                window.location.href = url;
+                let urlParams = new URLSearchParams(params).toString();
+                let authUrl = `${oauth2Endpoint}?${urlParams}`;
+                let popup = window.open(authUrl, "popup", "width=600,height=600");
+
+                window.addEventListener('message', function(event) {
+                    if (event.origin === "http://127.0.0.1:5500") {
+                        if (event.data.success) {
+                            alert("Connexion réussie via Google!");
+                        } else {
+                            alert("Erreur de connexion via Google.");
+                        }
+                        popup.close();
+                    }
+                }, false);
             });
+
             document.getElementById('githubSignInBtn').addEventListener('click', function () {
                 console.log("Bouton GitHub cliqué");
                 const clientId = 'Iv23liYaE8qNS4fUc2qF';
                 const redirectUri = 'http://127.0.0.1:5500/welcome.html';
                 const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user`;
-                console.log("Redirection vers : " + authUrl);
-                window.location.href = authUrl;
+                let popup = window.open(authUrl, "popup", "width=600,height=600");
+
+                window.addEventListener('message', function(event) {
+                    if (event.origin === "http://127.0.0.1:5500") {
+                        if (event.data.success) {
+                            alert("Connexion réussie via GitHub!");
+                        } else {
+                            alert("Erreur de connexion via GitHub.");
+                        }
+                        popup.close();
+                    }
+                }, false);
             });
 
             document.getElementById('linkedinSignInBtn').addEventListener('click', function () {
@@ -136,8 +158,18 @@
                 const clientId = '78c6vz1h9qnde0';
                 const redirectUri = 'http://127.0.0.1:5500/welcome.html';
                 const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=r_liteprofile`;
-                console.log("Redirection vers : " + authUrl);
-                window.location.href = authUrl;
+                let popup = window.open(authUrl, "popup", "width=600,height=600");
+
+                window.addEventListener('message', function(event) {
+                    if (event.origin === "http://127.0.0.1:5500") {
+                        if (event.data.success) {
+                            alert("Connexion réussie via LinkedIn!");
+                        } else {
+                            alert("Erreur de connexion via LinkedIn.");
+                        }
+                        popup.close();
+                    }
+                }, false);
             });
         };
     </script>
